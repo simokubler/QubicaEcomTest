@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, defineEmits, onMounted, onUnmounted } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
-
+import { useRouter } from 'vue-router';
+import { globalState } from '../stores/globalState';
 // check percorso o problema
 import HeaderButtonLogin from './HeaderButtonLogin.vue'; 
 import HeaderButtonCart from './HeaderButtonCart.vue'; 
@@ -11,7 +12,8 @@ const emit = defineEmits<{
   (event: 'show-sidebar', value: boolean): void;
 }>();
 
-const isBasketDropDown = useLocalStorage<boolean>('isBasketDropDown', false);
+const router = useRouter();
+const isCartDropDown = useLocalStorage<boolean>('isCartDropDown', false);
 const isAccountDropDown = useLocalStorage<boolean>('isAccountDropDown', false);
 const isWishListDropDown = useLocalStorage<boolean>('isWishListDropDown', false);
 const showSideBar = useLocalStorage<boolean>('showSideBar', false);
@@ -19,22 +21,22 @@ const cartItems = useLocalStorage<any[]>('cartItems', []);
 const wishItems = useLocalStorage<any[]>('wishItems', []);
 const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
 const categories = ref<string[]>([]);
-const isLoading = ref<boolean>(true);
+const isLoadingCats = ref<boolean>(true);
 const error = ref<string | null>(null);
-
+const selectedCategory = globalState.value.selectedCategory
 // Computed
 // const cartItemsCount = computed<number>(() => cartItems.value.length);
 
 const fetchCategories = async () => {
   try {
-    isLoading.value = true;
+    isLoadingCats.value = true;
     const response = await fetch('https://fakestoreapi.com/products/categories');
     if (!response.ok) throw new Error('Errore nel recupero delle categorie');
     categories.value = await response.json();
   } catch (err) {
     error.value = (err as Error).message;
   } finally {
-    isLoading.value = false;
+    isLoadingCats.value = false;
   }
 };
 
@@ -55,6 +57,12 @@ const eventListener = (event: MouseEvent): void => {
     showSideBar.value = false;
     emit('show-sidebar', false);
   }
+};
+
+const changeSelectedCat = (category: string | ''): void => {
+  if (category !== '') router.push({ query: { cat: category } });
+  else router.push({ query: {} });
+  globalState.value.selectedCategory = category
 };
 
 onMounted(() => {
@@ -94,9 +102,17 @@ showsidebar
                 >
               </li>
               <li class="navbar__item navbar__item--has-sub">
-                <a @click.prevent href="" class="navbar__link">Categories</a>
-                <ul v-if="!isLoading && !error" class="navbar__subset">
-                  <li v-for="(category, index) in categories" :key="index" class="navbar__link">{{ category }}</li>
+                <a @click.prevent href="" class="navbar__link">Categorie</a>
+                <ul v-if="!isLoadingCats && !error" class="navbar__subset">
+                  <li 
+                    @click="changeSelectedCat('')"
+                    class="navbar__link"
+                  >Tutte</li>
+                  <li v-for="(category, index) in categories" 
+                    :key="index" 
+                    @click="changeSelectedCat(category)"
+                    class="navbar__link"
+                  >{{ category }}</li>
                 </ul>
                 <ul v-else class="navbar__subset">
                   <li class="navbar__link"><i>Caricamento in corso...</i></li>
