@@ -16,16 +16,6 @@ const username = ref<string>('');
 const password = ref<string>('');
 const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
 const token = useLocalStorage<string>('authToken', '');
-const isBasketDropDown = useLocalStorage<boolean>('isBasketDropDown', false);
-const isAccountDropDown = useLocalStorage<boolean>('isAccountDropDown', false);
-const isWishListDropDown = useLocalStorage<boolean>('isWishListDropDown', false);
-
-const showDropDownAccount = (): void => {
-  isBasketDropDown.value = false;
-  isWishListDropDown.value = false;
-  isAccountDropDown.value = !isAccountDropDown.value;
-};
-
 
 const login = async (): Promise<void> => {
   try {
@@ -64,11 +54,9 @@ const logout = (): void => {
 <template>
   <div>
     <div v-if="isLoggedIn">
-      <p>Sei loggato!</p>
       <button @click="logout">Logout</button>
     </div>
     <div v-else>
-      <p>Non sei loggato</p>
       <button @click="showLoginPopup = true">Login</button>
     </div>
 

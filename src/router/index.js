@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import Home from '../views/Home.vue';
 import Product from '../views/Product.vue';
+import Cart from '../views/Cart.vue';
+import WishList from '../views/WishList.vue';
 
 const routes = [
   {
@@ -10,16 +12,21 @@ const routes = [
     component: Home,
   },
   {
-    path: '/product',
+    path: '/product/:id',
     name: 'Product',
     component: Product,
+    props: true, // Passa il parametro come prop al componente
   },
-//   rotte aggiuntive dinamiche
-//   {
-//     path: '/user/:id',
-//     name: 'User',
-//     component: User,
-//   }
+  {
+    path: '/cart/',
+    name: 'Cart',
+    component: Cart
+  },
+  {
+    path: '/wishlist/',
+    name: 'WishList',
+    component: WishList
+  },
 ];
 
 const router = createRouter({
