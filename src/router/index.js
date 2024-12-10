@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import Home from '../views/Home.vue';
 import Product from '../views/Product.vue';
+import Cart from '../views/Cart.vue';
 
 const routes = [
   {
@@ -14,6 +15,11 @@ const routes = [
     name: 'Product',
     component: Product,
     props: true, // Passa il parametro come prop al componente
+  },
+  {
+    path: '/cart/',
+    name: 'Cart',
+    component: Cart
   },
 ];
 
