@@ -52,8 +52,8 @@ const eventListener = (event: MouseEvent): void => {
 };
 
 const changeSelectedCat = (category: string | ''): void => {
-  if (category !== '') router.push({ query: { cat: category } });
-  else router.push({ query: {} });
+  if (category !== '') router.push({ name: 'Home', query: { cat: category } });
+  else router.push({ name: 'Home', query: {} });
   globalState.value.selectedCategory = category
 };
 
