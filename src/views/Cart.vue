@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core';
-import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
-const route = useRoute();
-const RouteParamsId = route.params.id as string;
+const router = useRouter();
+// const RouteParamsId = route.params.id as string;
 // const productId = Number(RouteParamsId);
 // const product = ref<{ 
 //     id: number; 
@@ -16,107 +16,89 @@ const RouteParamsId = route.params.id as string;
 //     rating: object
 //     } | null>(null);
 const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
-const cartItems = useLocalStorage<{ idprod: number; title: string; qty: number; priceTot: number }[]>('cartItems', []);
+const cartItems = useLocalStorage<{ idprod: number; title: string; image: string; qty: number; priceSing: number, priceTot: number }[]>('cartItems', []);
 const wishItems = useLocalStorage<{ idprod: number; title: string;}[]>('wishItems', []);
 const isLoadingProd = ref<boolean>(true);
 // const prodQty = ref<number>(1);
 
-// const getProduct = async (idprod: number) => {
-//     try {
-//         // cartItems.value = []
-//         isLoadingProd.value = true
-//         const response = await fetch(`https://fakestoreapi.com/products/${idprod}`)
-//         product.value = await response.json();
-//     } catch {
-//         console.error('Errore nel fetching product');
-//     } finally {
-//         isLoadingProd.value = false
-//     }
-// }
+const checkIsLogged = ():void => {
+    if(!isLoggedIn.value) router.push({name: 'Home'})
+}
 
-// const addCart = ():void => {
-//     const existingItem = cartItems.value.find(item => item.idprod === productId);
-//     const priceTot = prodQty.value * product.value.price
-//     if (!existingItem) {
-//         cartItems.value.push({
-//             idprod: productId,
-//             title: product.value.title,
-//             qty: prodQty.value,
-//             priceTot: priceTot
-//         })
-//     } else {
-//         existingItem.qty += prodQty.value;
-//         existingItem.priceTot += priceTot;
-//     }
-// }
+const updateItem = (idProd: number, qtyProd: number, priceProd: number) => {
+    const existingIndex = cartItems.value.findIndex(item => item.idprod === idProd);
+    if (existingIndex !== -1) {
+        cartItems.value[existingIndex] = {
+            ...cartItems.value[existingIndex],
+            qty: qtyProd,
+            priceTot: qtyProd * priceProd,
+        };
+    }
+}
+const removeItem = (idProd: number) => {
+    cartItems.value = cartItems.value.filter(item => item.idprod !== idProd); 
+}
 
-// const toggleInWishList = ():void => {
-//     if (wishItems.value.some(item => item.idprod === productId)) {
-//         wishItems.value = wishItems.value.filter(item => item.idprod !== productId);
-//     } else {
-//         wishItems.value.push({
-//             idprod: productId,
-//             title: product.value.title
-//         })
-//     }
-// }
+watch(
+  () => isLoggedIn.value,
+  (newStatus) => {
+    if (!newStatus) checkIsLogged()
+  }
+);
 
-// const isInWishlist = computed<boolean>(() => {
-//     return wishItems.value.some(item => item.idprod === productId);
-// });
+const totalCart = computed<number>(() => {
+    let total = 0;
+    for (const item of cartItems.value) {
+        total += item.priceTot;
+    }
+    return total;
+});
 
-// onMounted(() => {
-//     getProduct(productId);
-// });
+onMounted(() => {
+    checkIsLogged();
+});
 
 </script>
 <template>
     <div>
         <div>
-            <div v-if="cartItems" class="product_container">
-            Elenco cart
-                <!-- <div class="product_image card__image">
-                    <img 
-                        :src="product.image" 
-                        class="card__img"/>
+            <h2>cartItems</h2>
+            {{ cartItems }}
+        
+            <div v-if="cartItems.length > 0" class="cart_container">
+                <div class="cart_item">
+                    <div class="cart_item-img">Immagine</div>
+                    <div class="cart_item-title">Titolo</div>
+                    <div class="cart_item-qty">Quantità</div>
+                    <div class="cart_item-price">Prezzo</div>
                 </div>
-                <div class="product_content">
-                    <div class="product_content-title card__title">
-                        <h2>{{ product.title }}</h2>
+                <div v-for="item in cartItems" :key="item.idprod" class="cart_item">
+                    <div class="cart_item-img">
+                        <img :src="item.image" />
                     </div>
-                    <div class="product_content-description">
-                        <p>{{ product.description }}</p>
+                    <div class="cart_item-title">
+                        {{ item.title }}
                     </div>
-                    <div class="product_content-price">
-                        <span class="card__total-price">&euro;{{ product.price }}</span>
+                    <div class="cart_item-qty">
+                        <input 
+                        type="number"
+                        min="1"
+                        v-model="item.qty"
+                        @input="updateItem(item.idprod, item.qty, item.priceSing)"
+                        />
                     </div>
-                    <div v-if="isLoggedIn" class="product_content-price">
-                        <span class="card__add-cart">
-                            <input 
-                                type="number" 
-                                min="1" 
-                                v-model="prodQty" 
-                            />
-                            <button @click="addCart()">
-                                Aggiungi al carrello
-                                <img class="card__bottom__icon" src="../assets/img/cart_add.svg"/>
-                            </button>
-                        </span>
+                    <div class="cart_item-price">
+                        &euro; {{ item.priceTot }}
                     </div>
-                    <div v-if="isLoggedIn" class="product_content-price">
-                        <span class="card__add-wishlist">
-                            <button @click="toggleInWishList()">
-                                <span v-if="isInWishlist">
-                                    Rimuovi dalla lista dei desideri
-                                </span>
-                                <span v-else>
-                                    Aggiungi alla lista dei desideri
-                                </span>
-                                <img class="card__bottom__icon" src="../assets/img/wishlist_add.svg"/>
-                            </button>
-                        </span>
+                    <div class="cart_item-delete pointer">
+                        <img 
+                        @click="removeItem(item.idprod)"
+                        src="../assets/img/delete.svg" />
                     </div>
-                </div> -->
+                </div>
+                <div class="total_container">
+                    <div class="total-item">&euro; {{ totalCart }}</div>
+                </div>
             </div>
             <div v-else>
                 <i>Nessun prodotto nel carrello</i>

@@ -2,23 +2,21 @@
 import { ref, computed } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
 
-const cartItems = useLocalStorage<{ idprod: number; title: string; qty: number; priceTot: number }[]>('cartItems', []);
+const cartItems = useLocalStorage<{ idprod: number; title: string; image: string; qty: number; priceSing: number, priceTot: number }[]>('cartItems', []);
 const cartItemsCount = computed<number>(() => cartItems.value.length);
 
 </script>
 
 <template>
-    <div class="header__cart">
+    <router-link
+    :to="{ name: 'Cart' }"
+    class="header__cart pointer"
+    >
         <span class="header__cart-icon">
             <img src="../assets/img/cart_logo.svg"/>
         </span>
         <span class="header__cart-count">{{ cartItemsCount }}</span>
-        <!-- <router-link
-            :to="{ name: 'Cart' }"
-            class="btn btn--boxshadow btn--brand w--100"
-            >complete order</router-link
-        > -->
-    </div>
+    </router-link>
 </template>
 
 <style></style>
