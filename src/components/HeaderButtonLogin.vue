@@ -11,6 +11,10 @@ interface LoginResponse {
   token: string;
 }
 
+const cartItems = useLocalStorage<{ idprod: number; title: string; image: string; qty: number; priceSing: number, priceTot: number }[]>('cartItems', []);
+const wishItems = useLocalStorage<{ idprod: number; title: string; image: string; priceSing: number}[]>('wishItems', []);
+const user = useLocalStorage<{ username: string, password: string, token: string}>('user', {username: '', password: '', token: ''});
+
 const showLoginPopup = ref(false);
 const username = ref<string>('');
 const password = ref<string>('');
@@ -30,12 +34,15 @@ const login = async (): Promise<void> => {
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      throw new Error('Credenziali non valide');
-    }
+    if (!response.ok) throw new Error(`Credenziali non valide: ${response.statusText}`);
 
     const data: LoginResponse = await response.json();
     token.value = data.token;
+    user.value = {
+      username: username.value,
+      password: password.value,
+      token: data.token,
+    };
     isLoggedIn.value = true;
     showLoginPopup.value = false;
     username.value = '';
@@ -48,6 +55,13 @@ const login = async (): Promise<void> => {
 const logout = (): void => {
   token.value = '';
   isLoggedIn.value = false;
+  cartItems.value = []
+  wishItems.value = []
+  user.value = {
+    username: '',
+    password: '',
+    token: ''
+  }
 };
 </script>
 
