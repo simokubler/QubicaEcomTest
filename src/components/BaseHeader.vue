@@ -13,11 +13,8 @@ const emit = defineEmits<{
 }>();
 
 const router = useRouter();
-const isCartDropDown = useLocalStorage<boolean>('isCartDropDown', false);
-const isAccountDropDown = useLocalStorage<boolean>('isAccountDropDown', false);
-const isWishListDropDown = useLocalStorage<boolean>('isWishListDropDown', false);
 const showSideBar = useLocalStorage<boolean>('showSideBar', false);
-const cartItems = useLocalStorage<any[]>('cartItems', []);
+const cartItems = useLocalStorage<{ idprod: number, title: string, qty: number}[]>('cartItems', []);
 const wishItems = useLocalStorage<any[]>('wishItems', []);
 const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
 const categories = ref<string[]>([]);
@@ -48,11 +45,6 @@ const toggleSidebar = (): void => {
 const eventListener = (event: MouseEvent): void => {
   const target = event.target as HTMLElement;
 
-  if (!target.closest('.header__basket,.header__account,.header__wishlist')) {
-    isCartDropDown.value = false;
-    isAccountDropDown.value = false;
-    isWishListDropDown.value = false;
-  }
   if (!target.closest('.navbar')) {
     showSideBar.value = false;
     emit('show-sidebar', false);
@@ -118,28 +110,12 @@ showsidebar
                   <li class="navbar__link"><i>Caricamento in corso...</i></li>
                 </ul>
               </li>
-              <li class="navbar__item">
-                <router-link :to="{ name: 'Product' }" class="navbar__link"
-                  >Product</router-link
-                >
-              </li>
             </ul>
           </div>
           <div class="navbar__action">
             <HeaderButtonCart v-if="isLoggedIn" />
-            <HeaderButtonLogin />
-            <!-- <div class="header__account">
-              <span
-                class="header__account-icon"
-                @click="showDropDownAccount"
-              ></span>
-              <div
-                class="header__dropdown header__dropdown--w200"
-                :class="{ 'header__dropdown--is-active': isAccountDropDown }"
-              >
-              </div>
-            </div> -->
             <HeaderButtonWishList v-if="isLoggedIn" />
+            <HeaderButtonLogin />
             <div
               class="header__menu"
               :class="{ 'header__menu--is-active': showSideBar }"
