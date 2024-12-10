@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, defineEmits, onMounted, onUnmounted } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
 
-defineProps<{ msg: string }>();
+// check percorso o problema
+import HeaderButtonLogin from './HeaderButtonLogin.vue'; 
+import HeaderButtonCart from './HeaderButtonCart.vue'; 
+import HeaderButtonWishList from './HeaderButtonWishList.vue'; 
 
 const emit = defineEmits<{
   (event: 'show-sidebar', value: boolean): void;
@@ -14,15 +17,14 @@ const isWishListDropDown = useLocalStorage<boolean>('isWishListDropDown', false)
 const showSideBar = useLocalStorage<boolean>('showSideBar', false);
 const cartItems = useLocalStorage<any[]>('cartItems', []);
 const wishItems = useLocalStorage<any[]>('wishItems', []);
-
+const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
 const categories = ref<string[]>([]);
 const isLoading = ref<boolean>(true);
 const error = ref<string | null>(null);
 
 // Computed
-const cartItemsCount = computed<number>(() => cartItems.value.length);
+// const cartItemsCount = computed<number>(() => cartItems.value.length);
 
-// Funzione per recuperare le categorie
 const fetchCategories = async () => {
   try {
     isLoading.value = true;
@@ -36,41 +38,16 @@ const fetchCategories = async () => {
   }
 };
 
-const showDropDownBasket = (): void => {
-  isAccountDropDown.value = false;
-  isWishListDropDown.value = false;
-  isBasketDropDown.value = !isBasketDropDown.value;
-};
-
-const showDropDownAccount = (): void => {
-  isBasketDropDown.value = false;
-  isWishListDropDown.value = false;
-  isAccountDropDown.value = !isAccountDropDown.value;
-};
-
-const showDropDownWishList = (): void => {
-  isBasketDropDown.value = false;
-  isAccountDropDown.value = false;
-  isWishListDropDown.value = !isWishListDropDown.value;
-};
-
 const toggleSidebar = (): void => {
   showSideBar.value = !showSideBar.value;
   emit('show-sidebar', showSideBar.value);
-};
-
-const formattedPrice = (price: number): string => {
-  return new Intl.NumberFormat('en', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(price);
 };
 
 const eventListener = (event: MouseEvent): void => {
   const target = event.target as HTMLElement;
 
   if (!target.closest('.header__basket,.header__account,.header__wishlist')) {
-    isBasketDropDown.value = false;
+    isCartDropDown.value = false;
     isAccountDropDown.value = false;
     isWishListDropDown.value = false;
   }
@@ -133,59 +110,9 @@ showsidebar
             </ul>
           </div>
           <div class="navbar__action">
-            <div class="header__basket">
-              <span
-                class="header__basket-icon"
-                @click="showDropDownBasket"
-              ></span>
-              <span class="header__basket-count">{{ cartItemsCount }}</span>
-              <div
-                class="header__dropdown"
-                :class="{ 'header__dropdown--is-active': isBasketDropDown }"
-              >
-                <div
-                  class="header__dropdown-content header__dropdown-content--overflow"
-                >
-                  <div
-                    class="header__basket-item"
-                    v-for="item in cartItems"
-                    :key="item.id"
-                  >
-                    <a href="" class="header__basket-link">
-                      <img
-                        :src="require(`../assets/img/slider/${item.id}.jpg`)"
-                        class="header__basket-img"
-                      />
-                    </a>
-                    <div class="header__basket-details">
-                      <h5>
-                        <a class="header__basket-title" href=""
-                          >{{ item.name }} ({{ item.quantity }})</a
-                        >
-                      </h5>
-                      <div class="header__basket-price">
-                        {{ formattedPrice(item.price) }}
-                      </div>
-                      <button
-                        @click="removeItem(item)"
-                        type="button"
-                        class="header__basket-remove"
-                      >
-                        remove
-                      </button>
-                    </div>
-                  </div>
-                  <div class="header__basket-btn">
-                    <!-- <router-link
-                      :to="{ name: 'Cart' }"
-                      class="btn btn--boxshadow btn--brand w--100"
-                      >complete order</router-link
-                    > -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="header__account">
+            <HeaderButtonCart v-if="isLoggedIn" />
+            <HeaderButtonLogin />
+            <!-- <div class="header__account">
               <span
                 class="header__account-icon"
                 @click="showDropDownAccount"
@@ -194,43 +121,9 @@ showsidebar
                 class="header__dropdown header__dropdown--w200"
                 :class="{ 'header__dropdown--is-active': isAccountDropDown }"
               >
-                <div class="header__dropdown-content">
-                  <!-- <router-link
-                    :to="{ name: 'Login' }"
-                    class="header__account-link"
-                    >Login</router-link
-                  >
-                  <router-link
-                    :to="{ name: 'Register' }"
-                    class="header__account-link"
-                    >Register</router-link
-                  > -->
-                </div>
               </div>
-            </div>
-            <div class="header__wishlist">
-              <span
-                class="header__wishlist-icon"
-                @click="showDropDownWishList"
-              ></span>
-              <div
-                class="header__dropdown header__dropdown--w200"
-                :class="{ 'header__dropdown--is-active': isWishListDropDown }"
-              >
-                <div class="header__dropdown-content">
-                  <!-- <router-link
-                    :to="{ name: 'Login' }"
-                    class="header__account-link"
-                    >Login</router-link
-                  >
-                  <router-link
-                    :to="{ name: 'Register' }"
-                    class="header__account-link"
-                    >Register</router-link
-                  > -->
-                </div>
-              </div>
-            </div>
+            </div> -->
+            <HeaderButtonWishList v-if="isLoggedIn" />
             <div
               class="header__menu"
               :class="{ 'header__menu--is-active': showSideBar }"
@@ -242,6 +135,5 @@ showsidebar
     </div>
   </header>
 </template>
-
 
 <style></style>
