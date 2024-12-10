@@ -14,7 +14,7 @@ const emit = defineEmits<{
 
 const router = useRouter();
 const showSideBar = useLocalStorage<boolean>('showSideBar', false);
-const cartItems = useLocalStorage<{ idprod: number, title: string, qty: number}[]>('cartItems', []);
+const cartItems = useLocalStorage<{ idprod: number; title: string; image: string; qty: number; priceSing: number, priceTot: number }[]>('cartItems', []);
 const wishItems = useLocalStorage<any[]>('wishItems', []);
 const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
 const categories = ref<string[]>([]);

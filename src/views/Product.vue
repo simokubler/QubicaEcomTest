@@ -16,7 +16,7 @@ const product = ref<{
     rating: object
     } | null>(null);
 const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
-const cartItems = useLocalStorage<{ idprod: number; title: string; qty: number; priceTot: number }[]>('cartItems', []);
+const cartItems = useLocalStorage<{ idprod: number; title: string; image: string; qty: number; priceSing: number, priceTot: number }[]>('cartItems', []);
 const wishItems = useLocalStorage<{ idprod: number; title: string;}[]>('wishItems', []);
 const isLoadingProd = ref<boolean>(true);
 const prodQty = ref<number>(1);
@@ -41,7 +41,9 @@ const addCart = ():void => {
         cartItems.value.push({
             idprod: productId,
             title: product.value.title,
+            image: product.value.image,
             qty: prodQty.value,
+            priceSing: product.value.price,
             priceTot: priceTot
         })
     } else {
