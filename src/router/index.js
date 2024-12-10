@@ -10,16 +10,11 @@ const routes = [
     component: Home,
   },
   {
-    path: '/product',
+    path: '/product/:id',
     name: 'Product',
     component: Product,
+    props: true, // Passa il parametro come prop al componente
   },
-//   rotte aggiuntive dinamiche
-//   {
-//     path: '/user/:id',
-//     name: 'User',
-//     component: User,
-//   }
 ];
 
 const router = createRouter({

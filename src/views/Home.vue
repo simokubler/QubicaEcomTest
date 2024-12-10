@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
+import { useLocalStorage } from '@vueuse/core';
 import { globalState } from '../stores/globalState';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import HelloWorld from '../components/HelloWorld.vue'
 
-const route = useRoute();
-const isLoadingProds = ref<boolean>(true);
 const error = ref<string | null>(null);
-// Definire le categorie e i prodotti
 const products = ref<any[]>([]);
 const filteredProducts = ref<any[]>([]);
-// https://fakestoreapi.com/products/category/jewelery'
+const isLoadingProds = ref<boolean>(true);
+const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
+const route = useRoute();
+const router = useRouter();
+
 
 // Funzione per recuperare tutti i prodotti
 const fetchProducts = async () => {
@@ -48,6 +50,10 @@ const checkQueryFilterCat = ():void => {
   if (queryCategory) filterByCategory(queryCategory)
 };
 
+const goToProd = (idProd: number):void => {
+  router.push({name: 'Product', params: { id: idProd }})
+}
+
 onMounted(() => {
   fetchProducts();
   checkQueryFilterCat();
@@ -67,15 +73,19 @@ watch(
       <div v-if="!isLoadingProds">
         <div v-if="filteredProducts.length > 0" class="products">
           <div v-for="product in filteredProducts" :key="product.id" class="products__item">
-            <div class="card">
+            <div 
+              @click="goToProd(product.id)"
+              class="card">
               <div class="card__image">
                 <img :src="product.image" class="card__img"/>
               </div>
               <div class="card__title">
                 {{ product.title }}
               </div>
-              <div class="card__price">
+              <div class="card__bottom">
                 <span class="card__total-price">&euro;{{ product.price }}</span>
+                <span v-if="isLoggedIn" class="card__add-cart"><img class="card__bottom__icon" src="../assets/img/cart_add.svg"/></span>
+                <span v-if="isLoggedIn" class="card__add-wishlist"><img class="card__bottom__icon" src="../assets/img/wishlist_add.svg"/></span>
               </div>
             </div>
           </div>
