@@ -90,8 +90,7 @@ onMounted(() => {
                         <div class="product_content-price">
                             <span class="card__total-price">&euro;{{ product.price }}</span>
                         </div>
-                        <!-- <div v-if="isLoggedIn" class="product_content-price"> -->
-                        <div  class="product_content-price">
+                        <div v-if="isLoggedIn" class="product_content-price">
                             <span class="card__add-cart">
                                 <input 
                                     type="number" 
