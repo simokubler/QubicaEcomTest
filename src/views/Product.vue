@@ -17,7 +17,7 @@ const product = ref<{
     } | null>(null);
 const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
 const cartItems = useLocalStorage<{ idprod: number; title: string; image: string; qty: number; priceSing: number, priceTot: number }[]>('cartItems', []);
-const wishItems = useLocalStorage<{ idprod: number; title: string;}[]>('wishItems', []);
+const wishItems = useLocalStorage<{ idprod: number; title: string; image: string; priceSing: number}[]>('wishItems', []);
 const isLoadingProd = ref<boolean>(true);
 const prodQty = ref<number>(1);
 
@@ -58,7 +58,9 @@ const toggleInWishList = ():void => {
     } else {
         wishItems.value.push({
             idprod: productId,
-            title: product.value.title
+            title: product.value.title,
+            image: product.value.image,
+            priceSing: product.value.price
         })
     }
 }

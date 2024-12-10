@@ -4,22 +4,9 @@ import { useLocalStorage } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-// const RouteParamsId = route.params.id as string;
-// const productId = Number(RouteParamsId);
-// const product = ref<{ 
-//     id: number; 
-//     title: string; 
-//     price: number; 
-//     description: string;
-//     category: string;
-//     image: string;
-//     rating: object
-//     } | null>(null);
 const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
 const cartItems = useLocalStorage<{ idprod: number; title: string; image: string; qty: number; priceSing: number, priceTot: number }[]>('cartItems', []);
-const wishItems = useLocalStorage<{ idprod: number; title: string;}[]>('wishItems', []);
-const isLoadingProd = ref<boolean>(true);
-// const prodQty = ref<number>(1);
+const wishItems = useLocalStorage<{ idprod: number; title: string; image: string; priceSing: number}[]>('wishItems', []);
 
 const checkIsLogged = ():void => {
     if(!isLoggedIn.value) router.push({name: 'Home'})
