@@ -76,7 +76,7 @@ onMounted(() => {
 
 </script>
 <template>
-    <div>
+    <div class="card_content">
         <div>
             <div v-if="!isLoadingProd">
                 <div v-if="product" class="product_container">
@@ -93,16 +93,20 @@ onMounted(() => {
                             <p>{{ product.description }}</p>
                         </div>
                         <div class="product_content-price">
-                            <span class="card__total-price">&euro;{{ product.price }}</span>
+                            <span class="card__total-price"><b>&euro;{{ product.price }}</b></span>
                         </div>
                         <div v-if="isLoggedIn" class="product_content-addcart">
                             <span class="card__add-cart">
                                 <input 
+                                    id="prodQty"
                                     type="number" 
                                     min="1" 
                                     v-model="prodQty" 
                                 />
-                                <button @click="addCart()">
+                                <button 
+                                @click="addCart()"
+                                class="btn-servizio"
+                                >
                                     Aggiungi al carrello
                                     <img class="card__bottom__icon" src="../assets/img/cart_add.svg"/>
                                 </button>
@@ -110,7 +114,10 @@ onMounted(() => {
                         </div>
                         <div v-if="isLoggedIn" class="product_content-wishlist">
                             <span class="card__add-wishlist">
-                                <button @click="toggleInWishList()">
+                                <button 
+                                @click="toggleInWishList()"
+                                class="btn-servizio"
+                                >
                                     <span v-if="isInWishlist">
                                         Rimuovi dalla lista dei desideri
                                     </span>

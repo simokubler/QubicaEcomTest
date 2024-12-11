@@ -4,10 +4,6 @@ import { useLocalStorage } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 import { globalState } from '../stores/globalState';
 // check percorso o problema
-import HeaderButtonLogin from './HeaderButtonLogin.vue'; 
-import HeaderButtonCart from './HeaderButtonCart.vue'; 
-import HeaderButtonWishList from './HeaderButtonWishList.vue'; 
-import HeaderButtonDarkMode from './HeaderButtonDarkMode.vue'; 
 
 const emit = defineEmits<{
   (event: 'show-sidebar', value: boolean): void;
@@ -77,6 +73,7 @@ onUnmounted(() => {
           <div class="header__logo">
             <router-link
               :to="{ name: 'Home' }"
+              @click="changeSelectedCat(''), hideSidebar()"
               class="header__logo-img"
             >
             </router-link>
@@ -86,48 +83,11 @@ onUnmounted(() => {
             :class="{ 'navbar__items--is-active': showSideBar }"
           >
             <ul class="navbar__ul">
-              <li class="navbar__item">
-                <router-link
-                  :to="{ name: 'Home' }"
-                  @click="hideSidebar()"
-                  class="navbar__link"
-                  >Home</router-link
-                >
-              </li>
-              <!-- <li class="navbar__item navbar__item--has-sub">
-                <a @click.prevent href="" class="navbar__link">Categorie</a>
-                <ul v-if="!isLoadingCats && !error" class="navbar__subset"> -->
-                  <!-- <li 
-                    @click="changeSelectedCat('')"
-                    class="navbar__item"
-                  >Tutte</li> -->
-                  <li v-for="(category, index) in categories" 
-                    :key="index" 
-                    @click="changeSelectedCat(category), hideSidebar()"
-                    class="navbar__item pointer"
-                  ><a class="navbar__link ">{{ category }}</a></li>
-                <!-- </ul>
-                <ul v-else class="navbar__subset">
-                  <li class="navbar__link"><i>Caricamento in corso...</i></li>
-                </ul>
-              </li> -->
-              <!-- <li class="navbar__item navbar__item--has-sub">
-                <a @click.prevent href="" class="navbar__link">Categorie</a>
-                <ul v-if="!isLoadingCats && !error" class="navbar__subset">
-                  <li 
-                    @click="changeSelectedCat('')"
-                    class="navbar__link"
-                  >Tutte</li>
-                  <li v-for="(category, index) in categories" 
-                    :key="index" 
-                    @click="changeSelectedCat(category)"
-                    class="navbar__link"
-                  >{{ category }}</li>
-                </ul>
-                <ul v-else class="navbar__subset">
-                  <li class="navbar__link"><i>Caricamento in corso...</i></li>
-                </ul>
-              </li> -->
+              <li v-for="(category, index) in categories" 
+                :key="index" 
+                @click="changeSelectedCat(category), hideSidebar()"
+                class="navbar__item pointer"
+              ><a class="navbar__link ">{{ category }}</a></li>
             </ul>
           </div>
           <div class="navbar__action">

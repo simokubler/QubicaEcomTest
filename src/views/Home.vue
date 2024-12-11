@@ -12,15 +12,18 @@ const isLoggedIn = useLocalStorage<boolean>('isLoggedIn', false);
 const route = useRoute();
 const router = useRouter();
 
+const sortingOrder = computed(() => globalState.value.sorting);
+const selectedCategory = computed(() => globalState.value.selectedCategory);
 
 // Funzione per recuperare tutti i prodotti
-const fetchProducts = async () => {
+const fetchProducts = async (sorting: string = 'asc') => {
   try {
     isLoadingProds.value = true
-    const response = await fetch('https://fakestoreapi.com/products');
+    const response = await fetch(`https://fakestoreapi.com/products?sort=${sorting}`);
     if (!response.ok) throw new Error(`Errore nel fetching dei prodotti: ${response.statusText}`);
     products.value = await response.json();
     filteredProducts.value = products.value;
+    globalState.value.sorting = sorting
   } catch (error) {
     console.error('Errore nel fetching dei prodotti:', error);
   } finally {
@@ -28,27 +31,33 @@ const fetchProducts = async () => {
   }
 };
 
-const filterByCategory = async (category: string | '') => {
+const filterByCategory = async (category: string, sorting: string = 'asc') => {
   if (category !== '') {
     try {
       isLoadingProds.value = true
-      const response = await fetch (`https://fakestoreapi.com/products/category/${category}`);
+      const response = await fetch (`https://fakestoreapi.com/products/category/${category}?sort=${sorting}`);
       if (!response.ok) throw new Error(`Errore nel fetchingByCat dei prodotti: ${response.statusText}`);
       products.value = await response.json();
       filteredProducts.value = products.value;
+      globalState.value.sorting = sorting
     } catch(error) {
       console.error('Errore nel fetchingByCat dei prodotti:', error);
     } finally {
-      isLoadingProds.value = false
+        isLoadingProds.value = false
     }
   } else {
-    fetchProducts();
+    fetchProducts(sorting);
   }
 };
 
 const checkQueryFilterCat = ():void => {
   const queryCategory = Array.isArray(route.query.cat) ? route.query.cat[0] : route.query.cat || '';
-  if (queryCategory) filterByCategory(queryCategory)
+  if (queryCategory) {
+    globalState.value.selectedCategory = queryCategory
+    filterByCategory(queryCategory)
+  } else {
+    fetchProducts();
+  } 
 };
 
 const goToProd = (idProd: number):void => {
@@ -56,7 +65,6 @@ const goToProd = (idProd: number):void => {
 }
 
 onMounted(() => {
-  fetchProducts();
   checkQueryFilterCat();
 });
 
@@ -69,9 +77,26 @@ watch(
 
 </script>
 <template>
-    <div>
+    <div class="card_content">
+      <h2>Elenco dei prodotti</h2> 
         <!-- Elenco dei prodotti filtrati -->
       <div v-if="!isLoadingProds">
+        <div class="sorting_container">
+          <button
+            v-if="sortingOrder === 'asc'"
+            @click="filterByCategory(selectedCategory, 'desc')"
+            class="btn-servizio"
+            >
+              Ordine decrescente <img src="../assets/img/arrow-up.svg"/>
+          </button>
+          <button
+            v-else
+            @click="filterByCategory(selectedCategory, 'asc')"
+            class="btn-servizio"
+            >
+              Ordine crescente <img src="../assets/img/arrow-down.svg"/>
+          </button>
+        </div>
         <div v-if="filteredProducts.length > 0" class="products">
           <div v-for="product in filteredProducts" :key="product.id" class="products__item">
             <div 
