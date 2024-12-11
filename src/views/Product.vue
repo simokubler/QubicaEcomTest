@@ -125,7 +125,7 @@ onMounted(() => {
                 </div>
             </div>
             <div v-else>
-                <i>Caricamento del prodotto in corso...</i>
+                <PreLoader>Caricamento del prodotto in corso...</PreLoader>
             </div>
         </div>
     </div>

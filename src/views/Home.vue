@@ -105,7 +105,7 @@ watch(
         <HelloWorld msg="Vite + Vue" /> -->
       </div>
       <div v-else>
-        <p><i>Caricamento in corso...</i></p>
+        <PreLoader>Caricamento in corso...</PreLoader>
       </div>
     </div>
 </template>
