@@ -7,6 +7,7 @@ import { globalState } from '../stores/globalState';
 import HeaderButtonLogin from './HeaderButtonLogin.vue'; 
 import HeaderButtonCart from './HeaderButtonCart.vue'; 
 import HeaderButtonWishList from './HeaderButtonWishList.vue'; 
+import HeaderButtonDarkMode from './HeaderButtonDarkMode.vue'; 
 
 const emit = defineEmits<{
   (event: 'show-sidebar', value: boolean): void;
@@ -28,7 +29,7 @@ const fetchCategories = async () => {
   try {
     isLoadingCats.value = true;
     const response = await fetch('https://fakestoreapi.com/products/categories');
-    if (!response.ok) throw new Error('Errore nel recupero delle categorie');
+    if (!response.ok) throw new Error(`Errore nel recupero delle categorie: ${response.statusText}`);
     categories.value = await response.json();
   } catch (err) {
     error.value = (err as Error).message;
@@ -41,19 +42,20 @@ const toggleSidebar = (): void => {
   showSideBar.value = !showSideBar.value;
   emit('show-sidebar', showSideBar.value);
 };
-
+const hideSidebar = ():void => {
+  showSideBar.value = false;
+  emit('show-sidebar', false);
+}
 const eventListener = (event: MouseEvent): void => {
   const target = event.target as HTMLElement;
-
   if (!target.closest('.navbar')) {
-    showSideBar.value = false;
-    emit('show-sidebar', false);
+    hideSidebar()
   }
 };
 
 const changeSelectedCat = (category: string | ''): void => {
-  if (category !== '') router.push({ query: { cat: category } });
-  else router.push({ query: {} });
+  if (category !== '') router.push({ name: 'Home', query: { cat: category } });
+  else router.push({ name: 'Home', query: {} });
   globalState.value.selectedCategory = category
 };
 
@@ -69,8 +71,6 @@ onUnmounted(() => {
 
 <template>
 <header class="header header--bg">
-showsidebar
-{{showSideBar}}
     <div class="container">
       <div class="navbar">
         <div class="navbar__row">
@@ -89,11 +89,29 @@ showsidebar
               <li class="navbar__item">
                 <router-link
                   :to="{ name: 'Home' }"
-                  class="navbar__link navbar__link--is-active"
-                  >home</router-link
+                  @click="hideSidebar()"
+                  class="navbar__link"
+                  >Home</router-link
                 >
               </li>
-              <li class="navbar__item navbar__item--has-sub">
+              <!-- <li class="navbar__item navbar__item--has-sub">
+                <a @click.prevent href="" class="navbar__link">Categorie</a>
+                <ul v-if="!isLoadingCats && !error" class="navbar__subset"> -->
+                  <!-- <li 
+                    @click="changeSelectedCat('')"
+                    class="navbar__item"
+                  >Tutte</li> -->
+                  <li v-for="(category, index) in categories" 
+                    :key="index" 
+                    @click="changeSelectedCat(category), hideSidebar()"
+                    class="navbar__item pointer"
+                  ><a class="navbar__link ">{{ category }}</a></li>
+                <!-- </ul>
+                <ul v-else class="navbar__subset">
+                  <li class="navbar__link"><i>Caricamento in corso...</i></li>
+                </ul>
+              </li> -->
+              <!-- <li class="navbar__item navbar__item--has-sub">
                 <a @click.prevent href="" class="navbar__link">Categorie</a>
                 <ul v-if="!isLoadingCats && !error" class="navbar__subset">
                   <li 
@@ -109,18 +127,21 @@ showsidebar
                 <ul v-else class="navbar__subset">
                   <li class="navbar__link"><i>Caricamento in corso...</i></li>
                 </ul>
-              </li>
+              </li> -->
             </ul>
           </div>
           <div class="navbar__action">
             <HeaderButtonCart v-if="isLoggedIn" />
             <HeaderButtonWishList v-if="isLoggedIn" />
             <HeaderButtonLogin />
-            <div
+            <HeaderButtonDarkMode />
+            <button
               class="header__menu"
               :class="{ 'header__menu--is-active': showSideBar }"
               @click="toggleSidebar"
-            >Clicca</div>
+            >
+              <img src="../assets/img/burger-menu.svg"/>
+            </button>
           </div>
         </div>
       </div>

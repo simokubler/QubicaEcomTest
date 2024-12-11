@@ -11,9 +11,9 @@ const wishItemsCount = computed<number>(() => wishItems.value.length);
     <router-link 
         :to="{name: 'WishList'}"
         class="header__wishlist">
-        <span class="header__wishlist-icon">
+        <button class="header__wishlist-icon">
             <img src="../assets/img/wishlist_add.svg"/>
-        </span>
+        </button>
         <span class="header__wishlist-count">{{ wishItemsCount }}</span>
     </router-link>
 </template>
