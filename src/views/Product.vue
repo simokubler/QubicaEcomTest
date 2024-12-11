@@ -26,9 +26,10 @@ const getProduct = async (idprod: number) => {
         // cartItems.value = []
         isLoadingProd.value = true
         const response = await fetch(`https://fakestoreapi.com/products/${idprod}`)
+        if (!response.ok) throw new Error(`Errore nel fetching del prodotto: ${response.statusText}`);
         product.value = await response.json();
     } catch {
-        console.error('Errore nel fetching product');
+        console.error('Errore nel fetching del prodotto');
     } finally {
         isLoadingProd.value = false
     }
@@ -94,7 +95,7 @@ onMounted(() => {
                         <div class="product_content-price">
                             <span class="card__total-price">&euro;{{ product.price }}</span>
                         </div>
-                        <div v-if="isLoggedIn" class="product_content-price">
+                        <div v-if="isLoggedIn" class="product_content-addcart">
                             <span class="card__add-cart">
                                 <input 
                                     type="number" 
@@ -107,7 +108,7 @@ onMounted(() => {
                                 </button>
                             </span>
                         </div>
-                        <div v-if="isLoggedIn" class="product_content-price">
+                        <div v-if="isLoggedIn" class="product_content-wishlist">
                             <span class="card__add-wishlist">
                                 <button @click="toggleInWishList()">
                                     <span v-if="isInWishlist">
