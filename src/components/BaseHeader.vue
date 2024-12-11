@@ -7,6 +7,7 @@ import { globalState } from '../stores/globalState';
 import HeaderButtonLogin from './HeaderButtonLogin.vue'; 
 import HeaderButtonCart from './HeaderButtonCart.vue'; 
 import HeaderButtonWishList from './HeaderButtonWishList.vue'; 
+import HeaderButtonDarkMode from './HeaderButtonDarkMode.vue'; 
 
 const emit = defineEmits<{
   (event: 'show-sidebar', value: boolean): void;
@@ -116,6 +117,7 @@ showsidebar
             <HeaderButtonCart v-if="isLoggedIn" />
             <HeaderButtonWishList v-if="isLoggedIn" />
             <HeaderButtonLogin />
+            <HeaderButtonDarkMode />
             <div
               class="header__menu"
               :class="{ 'header__menu--is-active': showSideBar }"
