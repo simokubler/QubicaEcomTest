@@ -3,7 +3,6 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core';
 import { globalState } from '../stores/globalState';
 import { useRoute, useRouter } from 'vue-router';
-import HelloWorld from '../components/HelloWorld.vue'
 
 const error = ref<string | null>(null);
 const products = ref<any[]>([]);
@@ -19,6 +18,7 @@ const fetchProducts = async () => {
   try {
     isLoadingProds.value = true
     const response = await fetch('https://fakestoreapi.com/products');
+    if (!response.ok) throw new Error(`Errore nel fetching dei prodotti: ${response.statusText}`);
     products.value = await response.json();
     filteredProducts.value = products.value;
   } catch (error) {
@@ -33,6 +33,7 @@ const filterByCategory = async (category: string | '') => {
     try {
       isLoadingProds.value = true
       const response = await fetch (`https://fakestoreapi.com/products/category/${category}`);
+      if (!response.ok) throw new Error(`Errore nel fetchingByCat dei prodotti: ${response.statusText}`);
       products.value = await response.json();
       filteredProducts.value = products.value;
     } catch(error) {
@@ -75,7 +76,7 @@ watch(
           <div v-for="product in filteredProducts" :key="product.id" class="products__item">
             <div 
               @click="goToProd(product.id)"
-              class="card">
+              class="card pointer">
               <div class="card__image">
                 <img :src="product.image" class="card__img"/>
               </div>
@@ -104,7 +105,7 @@ watch(
         <HelloWorld msg="Vite + Vue" /> -->
       </div>
       <div v-else>
-        <p><i>Caricamento in corso...</i></p>
+        <PreLoader>Caricamento in corso...</PreLoader>
       </div>
     </div>
 </template>
