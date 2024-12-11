@@ -42,13 +42,14 @@ const toggleSidebar = (): void => {
   showSideBar.value = !showSideBar.value;
   emit('show-sidebar', showSideBar.value);
 };
-
+const hideSidebar = ():void => {
+  showSideBar.value = false;
+  emit('show-sidebar', false);
+}
 const eventListener = (event: MouseEvent): void => {
   const target = event.target as HTMLElement;
-
   if (!target.closest('.navbar')) {
-    showSideBar.value = false;
-    emit('show-sidebar', false);
+    hideSidebar()
   }
 };
 
@@ -70,8 +71,6 @@ onUnmounted(() => {
 
 <template>
 <header class="header header--bg">
-showsidebar
-{{showSideBar}}
     <div class="container">
       <div class="navbar">
         <div class="navbar__row">
@@ -90,8 +89,9 @@ showsidebar
               <li class="navbar__item">
                 <router-link
                   :to="{ name: 'Home' }"
-                  class="navbar__link navbar__link--is-active"
-                  >home</router-link
+                  @click="hideSidebar()"
+                  class="navbar__link"
+                  >Home</router-link
                 >
               </li>
               <li class="navbar__item navbar__item--has-sub">
@@ -118,11 +118,13 @@ showsidebar
             <HeaderButtonWishList v-if="isLoggedIn" />
             <HeaderButtonLogin />
             <HeaderButtonDarkMode />
-            <div
+            <button
               class="header__menu"
               :class="{ 'header__menu--is-active': showSideBar }"
               @click="toggleSidebar"
-            >Clicca</div>
+            >
+              <img src="../assets/img/burger-menu.svg"/>
+            </button>
           </div>
         </div>
       </div>
