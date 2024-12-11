@@ -39,7 +39,7 @@ const filterByCategory = async (category: string | '') => {
     } catch(error) {
       console.error('Errore nel fetchingByCat dei prodotti:', error);
     } finally {
-      isLoadingProds.value = false
+        isLoadingProds.value = false
     }
   } else {
     fetchProducts();
@@ -69,7 +69,8 @@ watch(
 
 </script>
 <template>
-    <div>
+    <div class="card_content">
+      <h2>Elenco dei prodotti</h2> 
         <!-- Elenco dei prodotti filtrati -->
       <div v-if="!isLoadingProds">
         <div v-if="filteredProducts.length > 0" class="products">

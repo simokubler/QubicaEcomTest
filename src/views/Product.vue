@@ -76,7 +76,7 @@ onMounted(() => {
 
 </script>
 <template>
-    <div>
+    <div class="card_content">
         <div>
             <div v-if="!isLoadingProd">
                 <div v-if="product" class="product_container">

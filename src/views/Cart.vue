@@ -47,7 +47,7 @@ onMounted(() => {
 
 </script>
 <template>
-    <div>
+    <div class="card_content">
         <div class="cart_container">
             <h2>Carrello</h2>        
             <div v-if="cartItems.length > 0" class="cart_list">

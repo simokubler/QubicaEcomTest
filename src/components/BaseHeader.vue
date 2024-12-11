@@ -77,6 +77,7 @@ onUnmounted(() => {
           <div class="header__logo">
             <router-link
               :to="{ name: 'Home' }"
+              @click="changeSelectedCat(''), hideSidebar()"
               class="header__logo-img"
             >
             </router-link>
@@ -86,14 +87,14 @@ onUnmounted(() => {
             :class="{ 'navbar__items--is-active': showSideBar }"
           >
             <ul class="navbar__ul">
-              <li class="navbar__item">
+              <!-- <li class="navbar__item">
                 <router-link
                   :to="{ name: 'Home' }"
-                  @click="hideSidebar()"
+                  @click="changeSelectedCat(''), hideSidebar()"
                   class="navbar__link"
                   >Home</router-link
                 >
-              </li>
+              </li> -->
               <!-- <li class="navbar__item navbar__item--has-sub">
                 <a @click.prevent href="" class="navbar__link">Categorie</a>
                 <ul v-if="!isLoadingCats && !error" class="navbar__subset"> -->
