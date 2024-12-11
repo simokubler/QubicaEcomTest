@@ -4,10 +4,6 @@ import { useLocalStorage } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 import { globalState } from '../stores/globalState';
 // check percorso o problema
-import HeaderButtonLogin from './HeaderButtonLogin.vue'; 
-import HeaderButtonCart from './HeaderButtonCart.vue'; 
-import HeaderButtonWishList from './HeaderButtonWishList.vue'; 
-import HeaderButtonDarkMode from './HeaderButtonDarkMode.vue'; 
 
 const emit = defineEmits<{
   (event: 'show-sidebar', value: boolean): void;
