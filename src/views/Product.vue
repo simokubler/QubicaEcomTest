@@ -103,7 +103,10 @@ onMounted(() => {
                                     min="1" 
                                     v-model="prodQty" 
                                 />
-                                <button @click="addCart()">
+                                <button 
+                                @click="addCart()"
+                                class="btn-servizio"
+                                >
                                     Aggiungi al carrello
                                     <img class="card__bottom__icon" src="../assets/img/cart_add.svg"/>
                                 </button>
@@ -111,7 +114,10 @@ onMounted(() => {
                         </div>
                         <div v-if="isLoggedIn" class="product_content-wishlist">
                             <span class="card__add-wishlist">
-                                <button @click="toggleInWishList()">
+                                <button 
+                                @click="toggleInWishList()"
+                                class="btn-servizio"
+                                >
                                     <span v-if="isInWishlist">
                                         Rimuovi dalla lista dei desideri
                                     </span>
