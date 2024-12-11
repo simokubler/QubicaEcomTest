@@ -12,9 +12,9 @@ const cartItemsCount = computed<number>(() => cartItems.value.length);
     :to="{ name: 'Cart' }"
     class="header__cart pointer"
     >
-        <span class="header__cart-icon">
+        <button class="header__cart-icon">
             <img src="../assets/img/cart_logo.svg"/>
-        </span>
+        </button>
         <span class="header__cart-count">{{ cartItemsCount }}</span>
     </router-link>
 </template>

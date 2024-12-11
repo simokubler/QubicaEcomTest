@@ -29,7 +29,7 @@ const fetchCategories = async () => {
   try {
     isLoadingCats.value = true;
     const response = await fetch('https://fakestoreapi.com/products/categories');
-    if (!response.ok) throw new Error('Errore nel recupero delle categorie');
+    if (!response.ok) throw new Error(`Errore nel recupero delle categorie: ${response.statusText}`);
     categories.value = await response.json();
   } catch (err) {
     error.value = (err as Error).message;
@@ -94,7 +94,24 @@ onUnmounted(() => {
                   >Home</router-link
                 >
               </li>
-              <li class="navbar__item navbar__item--has-sub">
+              <!-- <li class="navbar__item navbar__item--has-sub">
+                <a @click.prevent href="" class="navbar__link">Categorie</a>
+                <ul v-if="!isLoadingCats && !error" class="navbar__subset"> -->
+                  <!-- <li 
+                    @click="changeSelectedCat('')"
+                    class="navbar__item"
+                  >Tutte</li> -->
+                  <li v-for="(category, index) in categories" 
+                    :key="index" 
+                    @click="changeSelectedCat(category), hideSidebar()"
+                    class="navbar__item pointer"
+                  ><a class="navbar__link ">{{ category }}</a></li>
+                <!-- </ul>
+                <ul v-else class="navbar__subset">
+                  <li class="navbar__link"><i>Caricamento in corso...</i></li>
+                </ul>
+              </li> -->
+              <!-- <li class="navbar__item navbar__item--has-sub">
                 <a @click.prevent href="" class="navbar__link">Categorie</a>
                 <ul v-if="!isLoadingCats && !error" class="navbar__subset">
                   <li 
@@ -110,7 +127,7 @@ onUnmounted(() => {
                 <ul v-else class="navbar__subset">
                   <li class="navbar__link"><i>Caricamento in corso...</i></li>
                 </ul>
-              </li>
+              </li> -->
             </ul>
           </div>
           <div class="navbar__action">

@@ -66,7 +66,7 @@ const logout = (): void => {
 </script>
 
 <template>
-  <div>
+  <div class="header__account">
     <div v-if="isLoggedIn">
       <button @click="logout">Logout</button>
     </div>
@@ -78,11 +78,11 @@ const logout = (): void => {
       <div class="popup-content">
         <h2>Login</h2>
         <label>
-          Username:
+          <div>Username:</div>
           <input v-model="username" type="text" />
         </label>
         <label>
-          Password:
+          <div>Password:</div>
           <input v-model="password" type="password" />
         </label>
         <div class="buttons">
@@ -112,7 +112,8 @@ const logout = (): void => {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  max-width: 450px;
+  width: 100%;
   text-align: center;
 }
 
