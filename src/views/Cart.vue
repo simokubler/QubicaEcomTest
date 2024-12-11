@@ -48,16 +48,15 @@ onMounted(() => {
 </script>
 <template>
     <div>
-        <div>
-            <h2>cartItems</h2>
-            {{ cartItems }}
-        
-            <div v-if="cartItems.length > 0" class="cart_container">
+        <div class="cart_container">
+            <h2>Carrello</h2>        
+            <div v-if="cartItems.length > 0" class="cart_list">
                 <div class="cart_item">
                     <div class="cart_item-img">Immagine</div>
                     <div class="cart_item-title">Titolo</div>
                     <div class="cart_item-qty">Quantità</div>
                     <div class="cart_item-price">Prezzo</div>
+                    <div class="cart_item-delete"></div>
                 </div>
                 <div v-for="item in cartItems" :key="item.idprod" class="cart_item">
                     <div class="cart_item-img">
@@ -77,14 +76,15 @@ onMounted(() => {
                     <div class="cart_item-price">
                         &euro; {{ item.priceTot }}
                     </div>
-                    <div class="cart_item-delete pointer">
+                    <div class="cart_item-delete">
                         <img 
+                        class="pointer"
                         @click="removeItem(item.idprod)"
                         src="../assets/img/delete.svg" />
                     </div>
                 </div>
                 <div class="total_container">
-                    <div class="total-item">&euro; {{ totalCart }}</div>
+                    <div class="total-item">Totale &euro; {{ totalCart }}</div>
                 </div>
             </div>
             <div v-else>
