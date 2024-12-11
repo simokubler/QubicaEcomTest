@@ -93,11 +93,12 @@ onMounted(() => {
                             <p>{{ product.description }}</p>
                         </div>
                         <div class="product_content-price">
-                            <span class="card__total-price">&euro;{{ product.price }}</span>
+                            <span class="card__total-price"><b>&euro;{{ product.price }}</b></span>
                         </div>
                         <div v-if="isLoggedIn" class="product_content-addcart">
                             <span class="card__add-cart">
                                 <input 
+                                    id="prodQty"
                                     type="number" 
                                     min="1" 
                                     v-model="prodQty" 
