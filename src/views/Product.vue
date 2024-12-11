@@ -26,9 +26,10 @@ const getProduct = async (idprod: number) => {
         // cartItems.value = []
         isLoadingProd.value = true
         const response = await fetch(`https://fakestoreapi.com/products/${idprod}`)
+        if (!response.ok) throw new Error(`Errore nel fetching del prodotto: ${response.statusText}`);
         product.value = await response.json();
     } catch {
-        console.error('Errore nel fetching product');
+        console.error('Errore nel fetching del prodotto');
     } finally {
         isLoadingProd.value = false
     }
@@ -75,7 +76,7 @@ onMounted(() => {
 
 </script>
 <template>
-    <div>
+    <div class="card_content">
         <div>
             <div v-if="!isLoadingProd">
                 <div v-if="product" class="product_container">
@@ -92,24 +93,31 @@ onMounted(() => {
                             <p>{{ product.description }}</p>
                         </div>
                         <div class="product_content-price">
-                            <span class="card__total-price">&euro;{{ product.price }}</span>
+                            <span class="card__total-price"><b>&euro;{{ product.price }}</b></span>
                         </div>
-                        <div v-if="isLoggedIn" class="product_content-price">
+                        <div v-if="isLoggedIn" class="product_content-addcart">
                             <span class="card__add-cart">
                                 <input 
+                                    id="prodQty"
                                     type="number" 
                                     min="1" 
                                     v-model="prodQty" 
                                 />
-                                <button @click="addCart()">
+                                <button 
+                                @click="addCart()"
+                                class="btn-servizio"
+                                >
                                     Aggiungi al carrello
                                     <img class="card__bottom__icon" src="../assets/img/cart_add.svg"/>
                                 </button>
                             </span>
                         </div>
-                        <div v-if="isLoggedIn" class="product_content-price">
+                        <div v-if="isLoggedIn" class="product_content-wishlist">
                             <span class="card__add-wishlist">
-                                <button @click="toggleInWishList()">
+                                <button 
+                                @click="toggleInWishList()"
+                                class="btn-servizio"
+                                >
                                     <span v-if="isInWishlist">
                                         Rimuovi dalla lista dei desideri
                                     </span>
@@ -124,7 +132,7 @@ onMounted(() => {
                 </div>
             </div>
             <div v-else>
-                <i>Caricamento del prodotto in corso...</i>
+                <PreLoader>Caricamento del prodotto in corso...</PreLoader>
             </div>
         </div>
     </div>

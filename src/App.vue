@@ -1,15 +1,16 @@
 <script setup>
 import { ref } from 'vue'
+import { useDark } from '@vueuse/core';
 
 const isShowSideBar = ref(false);
-
+const isDark = useDark();
 const handleSidebar = (showSideBar) => {
   isShowSideBar.value = showSideBar;
 };
 </script>
 
 <template>
-  <div id="app">
+  <div id="apptemplate" :class="isDark ? 'dark' : 'light' ">
     <BaseHeader @show-sidebar="handleSidebar"/>
     <router-view />
   </div>
