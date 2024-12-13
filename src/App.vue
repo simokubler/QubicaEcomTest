@@ -12,7 +12,9 @@ const handleSidebar = (showSideBar) => {
 <template>
   <div id="apptemplate" :class="isDark ? 'dark' : 'light' ">
     <BaseHeader @show-sidebar="handleSidebar"/>
-    <router-view />
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -28,5 +30,13 @@ const handleSidebar = (showSideBar) => {
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease-in-out;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
