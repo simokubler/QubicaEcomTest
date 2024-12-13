@@ -128,6 +128,10 @@ const logout = (): void => {
   margin-top: 4px;
   margin-bottom: 10px;
 }
+.dark .popup-content {
+  background-color: #1a1a1a;
+  border: 1px solid;
+}
 
 .buttons button {
   margin: 5px;
