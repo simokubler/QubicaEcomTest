@@ -1,0 +1,8 @@
+<script>
+    var path = window.location.pathname;
+    var repoName = "/QubicaEcomTest"; // Cambia con il nome del tuo repository
+    if (!path.startsWith(repoName)) {
+      path = repoName + path;
+    }
+    window.location.href = path;
+</script>
