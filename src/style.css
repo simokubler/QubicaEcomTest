@@ -51,7 +51,7 @@ button.btn-servizio {
 button.btn-servizio:hover {
   background-color: #248fcd;
 }
-.btn-servizio img {
+.sorting_container .btn-servizio img {
   width: 10px;
 }
 .loader {
@@ -467,7 +467,8 @@ body {
   border-width: 1px;
 }
 .light button img,
-.dark img.card__bottom__icon {
+.dark img.card__bottom__icon,
+.dark .btn-servizio img {
   filter: invert(1);
 }
 
