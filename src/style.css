@@ -19,7 +19,7 @@
   animation: all 0.3s ease-in-out;
 }
 body {
-  background-color: #ffffff;
+  background-color: #f4f4f4;
   color: #000000;
   transition: background-color 0.3s, color 0.3s;
 }
@@ -42,6 +42,7 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
+  color: #fff;
   transition: border-color 0.25s;
 }
 button.btn-servizio {
@@ -175,6 +176,10 @@ body {
 .navbar__action button {
   padding: 0.45em 0.6em;
   margin-left: 3px;
+}
+.navbar__action button img {
+  position: relative;
+  top: 1.5px;
 }
 .navbar__action .header__account button {
   padding: 0.6em;
@@ -423,6 +428,7 @@ body {
   background-color: #000000;
   color: #ffffff;
 }
+.dark body,
 .dark #app,
 .dark .navbar,
 .dark .card_content {
